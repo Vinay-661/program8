@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Cartoon Gallery</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            font-family: Arial, sans-serif;
+            color: #263238;
+            background: linear-gradient(135deg, #fff3c4, #d9f3ff);
+        }
+
+        h1 {
+            margin: 0 0 24px;
+            text-align: center;
+            color: #5e35b1;
+        }
+
+        button {
+            display: block;
+            margin: 0 auto 20px;
+            padding: 12px 24px;
+            border: 0;
+            border-radius: 8px;
+            color: white;
+            background: #5e35b1;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        button:hover {
+            background: #4527a0;
+            transform: translateY(-2px);
+        }
+
+        #message {
+            text-align: center;
+            color: #546e7a;
+        }
+
+        #cartoons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            max-width: 1100px;
+            margin: 28px auto 0;
+        }
+
+        #cartoons > div {
+            padding: 16px;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            text-align: center;
+        }
+
+        #cartoons h2 {
+            margin: 4px 0 14px;
+            color: #ef6c00;
+            font-size: 21px;
+        }
+
+        #cartoons img {
+            display: block;
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        #cartoons p {
+            margin: 14px 0 4px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Cartoon Gallery</h1>
+
+    <button onclick="loadCartoons()">Load Cartoons</button>
+
+    <p id="message">
+        Click the button to load the cartoons...
+    </p>
+
+    <div id="cartoons"></div>
+
+    <script>
+
+        function loadCartoons() {
+
+            let message = document.querySelector("#message");
+            let cartoons = document.querySelector("#cartoons");
+
+            message.textContent = "Loading cartoons...";
+            cartoons.innerHTML = "";
+
+            // Replace this with your GitHub RAW JSON URL
+            fetch("https://raw.githubusercontent.com/samyak2403/daily-movies-api/main/movies/cartoons/cartoons.json")
+
+                .then(response => {
+
+                    if (!response.ok) {
+                        throw new Error("Failed to load cartoon data");
+                    }
+
+                    return response.json();
+                })
+
+                .then(data => {
+
+                    data.movies.forEach(cartoon => {
+
+                        let div = document.createElement("div");
+
+                        div.innerHTML = `
+                            <h2>${cartoon.title}</h2>
+                            <img src="${cartoon.thumbnail}" width="200">
+                            <p>${cartoon.description}</p>
+                        `;
+
+                        cartoons.appendChild(div);
+                    });
+
+                    message.textContent = "Cartoons loaded!";
+
+                })
+
+                .catch(error => {
+
+                    message.textContent =
+                        "Error loading cartoons.";
+
+                    console.error(error);
+
+                });
+        }
+
+    </script>
+
+</body>
+
+</html>
